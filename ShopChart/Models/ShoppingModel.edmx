@@ -1,0 +1,369 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ShopCartDbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BillingData">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Contact" Type="varchar" MaxLength="50" />
+          <Property Name="BillingAdress" Type="varchar" MaxLength="50" />
+          <Property Name="ClassificationCode" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Cart">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductID" Type="varchar" MaxLength="50" />
+          <Property Name="Price" Type="int" />
+          <Property Name="Category" Type="varchar" MaxLength="50" />
+          <Property Name="Color" Type="varchar" MaxLength="50" />
+          <Property Name="Brand" Type="varchar" MaxLength="50" />
+          <Property Name="Entery Date" Type="varchar" MaxLength="50" />
+          <Property Name="ChooseImage" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="Contact">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="50" />
+          <Property Name="Subject" Type="varchar" MaxLength="50" />
+          <Property Name="Message" Type="varchar" MaxLength="50" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductInfo">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Price" Type="int" />
+          <Property Name="Category" Type="varchar" MaxLength="50" />
+          <Property Name="Color" Type="varchar" MaxLength="50" />
+          <Property Name="Brand" Type="varchar" MaxLength="50" />
+          <Property Name="Entery Date" Type="varchar" MaxLength="50" />
+          <Property Name="ChooseImage" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="PurchasedData">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ProductID" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Price" Type="int" />
+          <Property Name="Category" Type="varchar" MaxLength="50" />
+          <Property Name="Color" Type="varchar" MaxLength="50" />
+          <Property Name="Brand" Type="varchar" MaxLength="50" />
+          <Property Name="Entery Date" Type="varchar" MaxLength="50" />
+          <Property Name="ChooseImage" Type="varchar" MaxLength="200" />
+          <Property Name="Email" Type="varchar" MaxLength="50" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RegisterAdmin">
+          <Key>
+            <PropertyRef Name="Email" />
+          </Key>
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" />
+          <Property Name="Status" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="RegisterCustomer">
+          <Key>
+            <PropertyRef Name="Email" />
+          </Key>
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="50" />
+          <Property Name="LastName" Type="varchar" MaxLength="50" />
+          <Property Name="Title" Type="varchar" MaxLength="50" />
+          <Property Name="Password" Type="varchar" MaxLength="50" />
+          <Property Name="DOB" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_BillingData_RegisterCustomer">
+          <End Role="RegisterCustomer" Type="Self.RegisterCustomer" Multiplicity="0..1" />
+          <End Role="BillingData" Type="Self.BillingData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegisterCustomer">
+              <PropertyRef Name="Email" />
+            </Principal>
+            <Dependent Role="BillingData">
+              <PropertyRef Name="Email" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchasedData_RegisterCustomer">
+          <End Role="RegisterCustomer" Type="Self.RegisterCustomer" Multiplicity="0..1" />
+          <End Role="PurchasedData" Type="Self.PurchasedData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegisterCustomer">
+              <PropertyRef Name="Email" />
+            </Principal>
+            <Dependent Role="PurchasedData">
+              <PropertyRef Name="Email" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ShopCartDbModelStoreContainer">
+          <EntitySet Name="BillingData" EntityType="Self.BillingData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cart" EntityType="Self.Cart" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProductInfo" EntityType="Self.ProductInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PurchasedData" EntityType="Self.PurchasedData" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RegisterAdmin" EntityType="Self.RegisterAdmin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RegisterCustomer" EntityType="Self.RegisterCustomer" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BillingData_RegisterCustomer" Association="Self.FK_BillingData_RegisterCustomer">
+            <End Role="RegisterCustomer" EntitySet="RegisterCustomer" />
+            <End Role="BillingData" EntitySet="BillingData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchasedData_RegisterCustomer" Association="Self.FK_PurchasedData_RegisterCustomer">
+            <End Role="RegisterCustomer" EntitySet="RegisterCustomer" />
+            <End Role="PurchasedData" EntitySet="PurchasedData" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ShopCartDbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BillingData">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Contact" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BillingAdress" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ClassificationCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="RegisterCustomer" Relationship="Self.FK_BillingData_RegisterCustomer" FromRole="BillingData" ToRole="RegisterCustomer" />
+        </EntityType>
+        <EntityType Name="Cart">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Int32" />
+          <Property Name="Category" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Entery_Date" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ChooseImage" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Contact">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Subject" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Message" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="ProductInfo">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Price" Type="Int32" />
+          <Property Name="Category" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Entery_Date" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ChooseImage" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PurchasedData">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ProductID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Price" Type="Int32" />
+          <Property Name="Category" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Entery_Date" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ChooseImage" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="RegisterCustomer" Relationship="Self.FK_PurchasedData_RegisterCustomer" FromRole="PurchasedData" ToRole="RegisterCustomer" />
+        </EntityType>
+        <EntityType Name="RegisterAdmin">
+          <Key>
+            <PropertyRef Name="Email" />
+          </Key>
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="RegisterCustomer">
+          <Key>
+            <PropertyRef Name="Email" />
+          </Key>
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DOB" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="BillingDatas" Relationship="Self.FK_BillingData_RegisterCustomer" FromRole="RegisterCustomer" ToRole="BillingData" />
+          <NavigationProperty Name="PurchasedDatas" Relationship="Self.FK_PurchasedData_RegisterCustomer" FromRole="RegisterCustomer" ToRole="PurchasedData" />
+        </EntityType>
+        <Association Name="FK_BillingData_RegisterCustomer">
+          <End Role="RegisterCustomer" Type="Self.RegisterCustomer" Multiplicity="0..1" />
+          <End Role="BillingData" Type="Self.BillingData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegisterCustomer">
+              <PropertyRef Name="Email" />
+            </Principal>
+            <Dependent Role="BillingData">
+              <PropertyRef Name="Email" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PurchasedData_RegisterCustomer">
+          <End Role="RegisterCustomer" Type="Self.RegisterCustomer" Multiplicity="0..1" />
+          <End Role="PurchasedData" Type="Self.PurchasedData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RegisterCustomer">
+              <PropertyRef Name="Email" />
+            </Principal>
+            <Dependent Role="PurchasedData">
+              <PropertyRef Name="Email" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ShopCartDbEntities18" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BillingDatas" EntityType="Self.BillingData" />
+          <EntitySet Name="Carts" EntityType="Self.Cart" />
+          <EntitySet Name="Contacts" EntityType="Self.Contact" />
+          <EntitySet Name="ProductInfoes" EntityType="Self.ProductInfo" />
+          <EntitySet Name="PurchasedDatas" EntityType="Self.PurchasedData" />
+          <EntitySet Name="RegisterAdmins" EntityType="Self.RegisterAdmin" />
+          <EntitySet Name="RegisterCustomers" EntityType="Self.RegisterCustomer" />
+          <AssociationSet Name="FK_BillingData_RegisterCustomer" Association="Self.FK_BillingData_RegisterCustomer">
+            <End Role="RegisterCustomer" EntitySet="RegisterCustomers" />
+            <End Role="BillingData" EntitySet="BillingDatas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PurchasedData_RegisterCustomer" Association="Self.FK_PurchasedData_RegisterCustomer">
+            <End Role="RegisterCustomer" EntitySet="RegisterCustomers" />
+            <End Role="PurchasedData" EntitySet="PurchasedDatas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ShopCartDbModelStoreContainer" CdmEntityContainer="ShopCartDbEntities18">
+          <EntitySetMapping Name="BillingDatas">
+            <EntityTypeMapping TypeName="ShopCartDbModel.BillingData">
+              <MappingFragment StoreEntitySet="BillingData">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Contact" ColumnName="Contact" />
+                <ScalarProperty Name="BillingAdress" ColumnName="BillingAdress" />
+                <ScalarProperty Name="ClassificationCode" ColumnName="ClassificationCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Carts">
+            <EntityTypeMapping TypeName="ShopCartDbModel.Cart">
+              <MappingFragment StoreEntitySet="Cart">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="Entery_Date" ColumnName="Entery Date" />
+                <ScalarProperty Name="ChooseImage" ColumnName="ChooseImage" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Contacts">
+            <EntityTypeMapping TypeName="ShopCartDbModel.Contact">
+              <MappingFragment StoreEntitySet="Contact">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductInfoes">
+            <EntityTypeMapping TypeName="ShopCartDbModel.ProductInfo">
+              <MappingFragment StoreEntitySet="ProductInfo">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="Entery_Date" ColumnName="Entery Date" />
+                <ScalarProperty Name="ChooseImage" ColumnName="ChooseImage" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchasedDatas">
+            <EntityTypeMapping TypeName="ShopCartDbModel.PurchasedData">
+              <MappingFragment StoreEntitySet="PurchasedData">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="Entery_Date" ColumnName="Entery Date" />
+                <ScalarProperty Name="ChooseImage" ColumnName="ChooseImage" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RegisterAdmins">
+            <EntityTypeMapping TypeName="ShopCartDbModel.RegisterAdmin">
+              <MappingFragment StoreEntitySet="RegisterAdmin">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RegisterCustomers">
+            <EntityTypeMapping TypeName="ShopCartDbModel.RegisterCustomer">
+              <MappingFragment StoreEntitySet="RegisterCustomer">
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

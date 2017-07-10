@@ -1,0 +1,593 @@
+﻿@model IEnumerable<Object>
+  @{
+      List<ShopChart.Models.Cart> listCart = Model.ToList()[0] as List<ShopChart.Models.Cart>;
+
+      List<ShopChart.Models.PurchasedData> listPurchasedData = Model.ToList()[1] as List<ShopChart.Models.PurchasedData>;
+      
+      
+  }
+@{
+   
+    ViewBag.Title = "MyAccount";
+
+    if (Session["user"] == null)
+    {
+        Response.Redirect("~/Home/Index");
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Shopping Cart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function ()
+        {
+            $('#delete_id').click(function ()
+            {
+                var userEmail = $('#email_id').val();
+                $.getJSON("/Home/FindUserAccount?email=" + userEmail, function (data)
+                {
+                    if (data)
+                    {
+                      
+                        alert(userEmail +  ' Deleted Successfully.');
+                    }
+                    else
+                    {
+                        alert('Error Found');
+                    }
+                });
+
+            });
+
+        });
+    </script>
+    <style>
+       
+
+        /*.look1 {
+            width: 200px;
+            height: 20px;
+            text-align: center;
+            background-color: gray;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 16px;
+
+        }*/
+    </style>
+    <!-- Bootstrap styles -->
+    <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
+    <!-- Customize styles -->
+
+    <link href="~/assets/style.css" rel="stylesheet" />
+    <!-- font awesome styles -->
+
+    <link href="~/assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <!--[if IE 7]>
+        <link href="css/font-awesome-ie7.min.css" rel="stylesheet">
+    <![endif]-->
+    <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!-- Favicons -->
+    <link rel="shortcut icon" href="~/assets/ico/favicon.ico">
+</head>
+<body>
+    <!-- modal -->
+    <div id="modal_alert" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: red; color: white;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><strong>Error</strong></h4>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Invalid Email or Password</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /modal -->
+    <!--
+        Upper Header Section
+    -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="topNav">
+            <div class="container">
+                <div class="alignR">
+                    <div class="pull-left socialNw">
+                        <a href="https://twitter.com/"><span class="icon-twitter"></span></a>
+                        <a href="https://www.facebook.com/"><span class="icon-facebook"></span></a>
+                        <a href="https://www.youtube.com/"><span class="icon-youtube"></span></a>
+                        <a href="https://www.tumblr.com/"><span class="icon-tumblr"></span></a>
+                    </div>
+                    <a href="@Url.Action("Index","Home")"> <span class="icon-home"></span> Home</a>
+                    <a href="@Url.Action("MyAccount","Home")"><span class="icon-user"></span> My Account</a>
+                    <a href="@Url.Action("Register", "Home", new { id=""})"><span class="icon-edit"></span> Free Register </a>
+                    <a href="@Url.Action("Contact","Home")"><span class="icon-envelope"></span> Contact us</a>
+                    <a href="@Url.Action("Cart","Home")"><span class="icon-shopping-cart"></span> 20 Item(s) - <span class="badge badge-warning"> $448.42</span></a>
+                    <a href="@Url.Action("ShopCart","Home")"> <span class="badge badge-warning"><span class="icon-shopping-cart"></span></span> @*@Model.Count()*@</a>
+                    <ul class="nav navbar-nav navbar-right">
+                        @if (Session["user"] != null)
+                        {
+                            ShopChart.Models.RegisterCustomer user = Session["user"] as ShopChart.Models.RegisterCustomer;
+                            if (ViewBag.Title == "MyAccount")
+                            {
+                                <li class="dropdown active">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="@Url.Action("MyAccount","Home")"><span class="glyphicon glyphicon-user"></span> @user.Email<span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li class="inner-addon mini-addon"><span class="glyphicon glyphicon-dashboard"></span><a href="~/Home/MyAccount" style="padding-left: 30px;"> My Account</a></li>
+                                        <li class="inner-addon mini-addon"><span class="glyphicon glyphicon-arrow-right"></span><a href="~/Home/MyAccount#MyAds" style="padding-left: 30px;"> My Purchased Products</a></li>
+                                        <li class="inner-addon mini-addon"><span class="glyphicon glyphicon-bookmark"></span><a href="~/Home/MyAccount#BookAds" style="padding-left: 30px;"> My Shopping Cart</a></li>
+                                        <li class="inner-addon mini-addon"><span class="glyphicon glyphicon-blackboard"></span><a href="~/Home/MyAccount#MyProfile" style="padding-left: 30px;"> My Profile</a></li>
+                                        <li class="inner-addon mini-addon"><span class="glyphicon glyphicon-log-out"></span><a href="@Url.Action("Logout", "Home")" style="padding-left: 30px;"> Logout</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="@Url.Action("MyAccount","Home")"><span class="glyphicon glyphicon-user"></span> @user.Email<span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li class="inner-addon mini-addon"><span class="glyphicon glyphicon-dashboard"></span><a href="~/Home/MyAccount" style="padding-left: 30px;"> My Account</a></li>
+                                        <li class="inner-addon mini-addon"><span class="glyphicon glyphicon-arrow-right"></span><a href="~/Home/MyAccount#MyAds" style="padding-left: 30px;"> My Purchased Products</a></li>
+                                        <li class="inner-addon mini-addon"><span class="glyphicon glyphicon-bookmark"></span><a href="~/Home/MyAccount#BookAds" style="padding-left: 30px;"> My Shopping Cart</a></li>
+                                        <li class="inner-addon mini-addon"><span class="glyphicon glyphicon-blackboard"></span><a href="~/Home/MyAccount#MyProfile" style="padding-left: 30px;"> My Profile</a></li>
+                                        <li class="inner-addon mini-addon"><span class="glyphicon glyphicon-log-out"></span><a href="@Url.Action("Logout", "Home")" style="padding-left: 30px;"> Logout</a></li>
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            if (ViewBag.Title == "Login")
+                            {
+                                <li><a href="~/Home/Register"><span class="glyphicon glyphicon-user"></span><strong> Sign Up</strong></a></li>
+                                <li class="active"><a href="~/Home/Login"><span class="glyphicon glyphicon-log-in"></span><strong> Login</strong></a></li>
+                            }
+                            else if (ViewBag.Title == "Sign Up")
+                            {
+                                <li class="active"><a href="~/Home/Register"><span class="glyphicon glyphicon-user"></span><strong> Sign Up</strong></a></li>
+                                <li><a href="~/Home/Login"><span class="glyphicon glyphicon-log-in"></span><strong> Login</strong></a></li>
+
+                            }
+                            else
+                            {
+                                <li><a href="~/Home/Register"><span class="glyphicon glyphicon-user"></span><strong> Sign Up</strong></a></li>
+                                <li><a href="~/Home/Login"><span class="glyphicon glyphicon-log-in"></span><strong> Login</strong></a></li>
+
+                            }
+                        }
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+    Lower Header Section
+    -->
+    <div class="container">
+        <div id="gototop"> </div>
+        <header id="header">
+            <div class="row">
+                <div class="span4">
+                    <h1>
+                        <a class="logo" href="@Url.Action("Index","Home")">
+                            <span>Twitter Bootstrap ecommerce template</span>
+                            <img src="~/assets/img/logo-bootstrap-shoping-cart.png" alt="bootstrap sexy shop">
+                        </a>
+                    </h1>
+
+                </div>
+                <div class="span4">
+
+                </div>
+                <div class="span4 alignR">
+                    <p><br> <strong> Support (24/7) :  0800 1234 678 </strong><br><br></p>
+                    <span class="btn btn-mini">[ 2 ] <span class="icon-shopping-cart"></span></span>
+                    <span class="btn btn-warning btn-mini">$</span>
+                    <span class="btn btn-mini">&pound;</span>
+                    <span class="btn btn-mini">&euro;</span>
+                </div>
+            </div>
+        </header>
+
+        <!--
+        Navigation Bar Section
+        -->
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <div class="nav-collapse">
+                        <ul class="nav">
+                            <li class="active"><a href="@Url.Action("Index","Home")">Home	</a></li>
+                            <li class=""><a href="@Url.Action("List_View","Home")">List View</a></li>
+                            <li class=""><a href="@Url.Action("Grid_View","Home")">Grid View</a></li>
+                            <li class=""><a href="@Url.Action("Three_Col","Home")">Three Column</a></li>
+                            <li class=""><a href="@Url.Action("Four_Col","Home")">Four Column</a></li>
+                            <li class=""><a href="@Url.Action("General","Home")">General Content</a></li>
+                        </ul>
+
+                        <form action="/Home/SearchProduct" class="navbar-search pull-left">
+                            <input type="text" placeholder="Search" class="search-query span2" name="SearchedID">
+                        </form>
+                        @*<ul class="nav pull-right">
+                            <li class="dropdown">
+                                <a data-toggle="dropdown" class="dropdown-toggle" href="#"><span class="icon-lock"></span> Login <b class="caret"></b></a>
+                                <div class="dropdown-menu">
+                                    <form class="form-horizontal loginFrm" action="/Admin/AdminLogin" method="post">
+                                        <div class="control-group">
+                                            <input type="email" class="span2" id="inputEmail" placeholder="Email" name="Email" required>
+                                        </div>
+                                        <div class="control-group">
+                                            <input type="password" class="span2" id="inputPassword" placeholder="Password" name="Password" required>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="checkbox">
+                                                <input type="checkbox"> Remember me
+                                            </label>
+                                            <button type="submit" class="shopBtn btn-block">Sign In</button>
+
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                        </ul>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--
+        Body Section
+        -->
+        <div class="row">
+           
+            <div class="span9">
+                <ul class="breadcrumb">
+                    <li><a href="@Url.Action("Index","Home")">Home</a> <span class="divider">/</span></li>
+                    <li class="active">My Account</li>
+                </ul>
+              
+               
+                <center>
+
+                    <h2><strong>Welcome <span class="user-name">@Session["UserFirstName"]</span></strong></h2>
+                    <br />
+                    <div class="container">
+                        <ul class="nav nav-tabs" style="background-color: #FF6600; border-radius: 5px;">
+                            <li class="active"><a href="#MyAds" data-toggle="tab" style="color:black;"><strong>My Purchased Products</strong></a></li>
+                            <li><a href="#BookAds" data-toggle="tab" style="color:black"><strong> My Cart</strong></a></li>
+                            <li><a href="#MyProfile" data-toggle="tab" style="color:black"><strong>My Profile</strong></a></li>
+                           
+                         </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="MyAds">
+                                <div class="panel panel-default container-fluid" style="width: 100%!important;">
+                                    <!----> <center><h1 style="color:greenyellow">My Purchased Products</h1></center><br>
+
+                                    @if (listPurchasedData.Count()==0)
+                                    {
+                                        <center>
+                                            <h3>Your Have Nothing Purchased </h3>
+                                            <h3>You have no items in your shopping list.</h3>
+                                            <h3>Click<a href="@Url.Action("Products","Home")"> here </a>to continue shopping.</h3>
+                                        </center>
+                                    }
+
+                                    else
+                                    {
+                                        <center>
+                                            <h1></h1>
+                                            <table class="table table-condensed">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Product</th>
+                                                        <th>Product ID </th>
+                                                        <th>Color </th>
+                                                        <th>Category </th>
+                                                        <th>Brand </th>
+                                                        <th>Avail.</th>
+                                                        <th>Unit price</th>
+                                                        <th>Purchased Date </th>
+                                                        <th>Your Email</th>
+                                                    </tr>
+                                                </thead>
+                                                @foreach (var item in listPurchasedData)
+                                                {
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><img src="~/Images/@item.ChooseImage" width="30" height="20" /></td>
+                                                            <td> @item.ProductID</td>
+                                                            <td> @item.Color</td>
+                                                            <td> @item.Category</td>
+                                                            <td> @item.Brand</td>
+                                                            <td><span class="shopBtn"><span class="icon-ok"></span></span> </td>
+                                                            <td>@item.Price</td>
+                                                            <td> @item.Entery_Date</td>
+                                                            <td> @item.Email</td>
+                                                        </tr>
+                                                    </tbody>
+                                                }
+                                            </table>
+
+
+                                            <h3>Click<a href="@Url.Action("Products","Home")"> here </a>to continue shopping.</h3>
+                                            <hr class="soften" />
+                                        </center><br><br>
+                                        @*using (Html.BeginForm(" CreatePdf", "Home", FormMethod.Post))
+                                {
+                                    <button type="submit" class="shopBtn">Download Receipt</button>
+                                }*@
+                                        <div class = "col-sm-2" >  
+                                      <div class = "btnbtn-success" >
+                                     @Html.ActionLink("Download Billing Details", "CreatePdf", "Home", new { style = "font-weight:bold;font-size:140%;" }) 
+                                    </div>  
+  
+                                       </div><br><br><br>
+                                    }
+                                 </div>
+                               
+                            </div>
+
+                            <div class="tab-pane fade" id="BookAds">
+                                <div class="panel panel-default container-fluid" style="width: 100%!important;">
+                                    <div id="ads-rows" class="panel-body row" style="overflow-y: auto; max-height:600px;">
+                                        <!----> <center><h1 style="color:greenyellow">My Cart </h1></center><br>
+
+                                        @if (listCart.Count()==0)
+                                        {
+                                            <center>
+                                                <h3>Your Shopping Cart is Empty </h3>
+                                                <h3>You have no items in your shopping cart.</h3>
+                                                <h3>Click<a href="@Url.Action("Products","Home")"> here </a>to continue shopping.</h3>
+                                            </center>
+                                        }
+
+                                        else
+                                        {
+                                            <center>
+                                                <table class="table table-condensed">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product</th>
+                                                            <th>Color </th>
+                                                            <th>Category </th>
+                                                            <th>Brand </th>
+                                                            <th>Product ID </th>
+                                                            <th>Avail.</th>
+                                                            <th>Unit price</th>
+                                                            <th>Entery Date </th>
+                                                            <th>Edit Your Cart</th>
+                                                        </tr>
+                                                    </thead>
+                                                    @foreach (var item in listCart)
+                                                    {
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><img src="~/Images/@item.ChooseImage" width="30" height="20" /></td>
+
+                                                                <td> @item.Color</td>
+                                                                <td> @item.Category</td>
+                                                                <td> @item.Brand</td>
+                                                                <td> @item.ProductID</td>
+                                                                <td><span class="shopBtn"><span class="icon-ok"></span></span> </td>
+                                                                <td>@item.Price</td>
+                                                                <td> @item.Entery_Date</td>
+                                                                <td>
+                                                                    @*<input class="span1" style="max-width:34px" placeholder="1" id="appendedInputButtons" size="16" type="text" value="2">*@
+                                                                    <div class="input-append">
+
+                                                                        <button class="btn btn-mini btn-danger" type="button" onclick="location.href='@Url.Action("RemoveCart", "Home", new { id=item.ID })'">
+
+                                                                            <span class="icon-remove"></span>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    }
+                                                </table>
+
+
+                                                <h3>Click<a href="@Url.Action("Products","Home")"> here </a>to continue shopping.</h3>
+                                                <hr class="soften" />
+                                            </center>
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+@if (Session["user"] != null)
+{
+ShopChart.Models.RegisterCustomer user1 = Session["user"] as ShopChart.Models.RegisterCustomer;
+
+    
+<div class="tab-pane fade" id="MyProfile" >
+<form id="profile_update_form" action="UpdateProfile" method="post">
+    @*@Html.ValidationSummary(true);*@
+    <div class="panel panel-default" style="width: 100%!important;">
+        <div class="panel-heading">
+            <h4><strong>Update your Account</strong></h4>
+            <label><strong>Note: <span style="color:#F00; font-size:20px">*</span></strong> represents required fields.</label>
+        </div>
+
+        <input id="email_id" name="email" value="@user1.Email" type="email" class="fileInput" />
+
+        <div class="panel-body">
+            <div style="margin:5px;">
+                <label><strong>First Name<span style="color:#F00; font-size:20px">*</span></strong></label>
+            </div>
+            <div style="width: 60%!important;">
+                <input id="fname_id" name="fname" value="@user1.FirstName" type="text" class="form-control" placeholder="e.g., Sanam " required="required" />
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <div style="margin:5px;">
+                <label><strong>Last Name<span style="color:#F00; font-size:20px">*</span></strong></label>
+            </div>
+            <div style="width: 60%!important;">
+                <input id="lname-id" name="lname" value="@user1.LastName" type="text" class="form-control" placeholder="e.g., Nawaz" required="required" />
+            </div>
+        </div>
+        <div class="panel-body">
+            <div style="margin:5px;">
+                <label><strong>Title<span style="color:#F00; font-size:20px">*</span></strong></label>
+            </div>
+            <div style="width: 60%!important;">
+                <input id="title_id" name="title" value="@user1.Title" type="text" class="form-control" placeholder="e.g., Mr/Miss" required="required" />
+            </div>
+        </div>
+
+                                       
+
+
+        <div class="panel-body">
+            <div style="margin:5px;">
+                <label><strong>Password<span style="color:#F00; font-size:20px">*</span></strong></label>
+            </div>
+            <div style="width: 60%!important;" class="toRightOf">
+                <input id="pass_id" name="password" value="@user1.Password" type="password" class="form-control" required="required" />
+                <span id="iconEye" class="glyphicon glyphicon-eye-open" style="cursor:pointer; display:none;"></span>
+            </div>
+        </div>
+
+                                     
+
+        <div class="panel-body">
+            <div style="margin:5px;">
+                <label><strong>Date of Birth<span style="color:#F00; font-size:20px">*</span></strong></label>
+            </div>
+            <div style="width: 60%!important;" class="toRightOf">
+                <input id="dob_id"  name ="dob" value="@user1.DOB" type="date" class="form-control" required="required" />
+                <span id="iconEyeR" class="glyphicon glyphicon-eye-open" style="cursor:pointer; display:none;"></span>
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            <button id="update_id" type="submit" class="btn btn-primary">
+                <strong>Update</strong>
+            </button>
+            or
+            <button id="delete_id" class="btn btn-danger"
+                    onclick="location.href='@Url.Action("DeleteAccount", "Home", new {id=@user1.Email})'">
+                <strong>Delete Account</strong>
+            </button>
+            <br />
+        </div>
+    </div>
+</form>
+</div>
+}
+                            
+                            </div>
+                </center>
+
+            </div>
+        </div>
+       
+        <!--
+        Clients
+        -->
+        <section class="our_client">
+            <hr class="soften" />
+            <h4 class="title cntr"><span class="text">Manufactures</span></h4>
+            <hr class="soften" />
+            <div class="row">
+                <div class="span2">
+                    <a href="#"><img alt="" src="~/assets/img/1.png"></a>
+                </div>
+                <div class="span2">
+                    <a href="#"><img alt="" src="~/assets/img/2.png"></a>
+                </div>
+                <div class="span2">
+                    <a href="#"><img alt="" src="~/assets/img/3.png"></a>
+                </div>
+                <div class="span2">
+                    <a href="#"><img alt="" src="~/assets/img/4.png"></a>
+                </div>
+                <div class="span2">
+                    <a href="#"><img alt="" src="~/assets/img/5.png"></a>
+                </div>
+                <div class="span2">
+                    <a href="#"><img alt="" src="~/assets/img/6.png"></a>
+                </div>
+            </div>
+        </section>
+
+        <!--
+        Footer
+        -->
+        <footer class="footer">
+            <div class="row-fluid">
+                <div class="span2">
+                    <h5>Your Account</h5>
+                    <a href="#">YOUR ACCOUNT</a><br>
+                    <a href="#">PERSONAL INFORMATION</a><br>
+                    <a href="#">ADDRESSES</a><br>
+                    <a href="#">DISCOUNT</a><br>
+                    <a href="#">ORDER HISTORY</a><br>
+                </div>
+                <div class="span2">
+                    <h5>Iinformation</h5>
+                    <a href="@Url.Action("Contact","Home")">CONTACT</a><br>
+                    <a href="#">SITEMAP</a><br>
+                    <a href="#">LEGAL NOTICE</a><br>
+                    <a href="#">TERMS AND CONDITIONS</a><br>
+                    <a href="#">ABOUT US</a><br>
+                </div>
+                <div class="span2">
+                    <h5>Our Offer</h5>
+                    <a href="#">NEW PRODUCTS</a> <br>
+                    <a href="#">TOP SELLERS</a><br>
+                    <a href="#">SPECIALS</a><br>
+                    <a href="#">MANUFACTURERS</a><br>
+                    <a href="#">SUPPLIERS</a> <br />
+                </div>
+                <div class="span6">
+                    <h5>The standard chunk of Lorem</h5>
+                    The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for
+                    those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et
+                    Malorum" by Cicero are also reproduced in their exact original form,
+                    accompanied by English versions from the 1914 translation by H. Rackham.
+                </div>
+            </div>
+        </footer>
+    </div><!-- /container -->
+
+    <div class="copyright">
+        <div class="container">
+            <p class="pull-right">
+                <a href="#"><img src="~/assets/img/maestro.png" alt="payment"></a>
+                <a href="#"><img src="~/assets/img/mc.png" alt="payment"></a>
+                <a href="#"><img src="~/assets/img/pp.png" alt="payment"></a>
+                <a href="#"><img src="~/assets/img/visa.png" alt="payment"></a>
+                <a href="#"><img src="~/assets/img/disc.png" alt="payment"></a>
+            </p>
+            <span>Copyright &copy; 2013<br> bootstrap ecommerce shopping template</span>
+        </div>
+    </div>
+    <a href="#" class="gotop"><i class="icon-double-angle-up"></i></a>
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="~/assets/js/jquery.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/jquery.easing-1.3.min.js"></script>
+    <script src="~/assets/js/jquery.scrollTo-1.4.3.1-min.js"></script>
+    <script src="~/assets/js/shop.js"></script>
+</body>
+</html>
